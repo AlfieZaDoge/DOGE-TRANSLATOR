@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doge Translator</title>
+    <style>
+        /* Global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background: linear-gradient(180deg, rgba(50, 75, 99, 0.7), rgba(97, 48, 48, 0.5)),
+                        url('https://garden.spoonflower.com/c/11304733/p/f/m/EUaFhYkYJFUQbdPqne0XIZaSWGm3pu7E6L0j-vzUUP7jpy32SaF9/Doge.jpg'); /* Add your image URL here */
+            background-size: cover; /* Ensure the image covers the entire background */
+            background-position: center; /* Center the image */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(180, 141, 13, 0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #ff0000;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            resize: none;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            border-color: #4CAF50;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .output-text {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: red;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            opacity: 0;
+            border-right: 4px solid #fff; /* Cursor effect for typewriter */
+            animation: typing 3s steps(30) 1s forwards, blinkCaret 0.75s step-end infinite;
+        }
+
+        /* Typewriter animation */
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        /* Blinking cursor effect */
+        @keyframes blinkCaret {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Doge Translator</h1>
+
+        <!-- Input area for text -->
+        <textarea id="inputText" placeholder="Enter English text or Doge-speak..."></textarea>
+
+        <!-- Button to convert the text -->
+        <button onclick="convertText()">Send</button>
+
+        <!-- Output area for showing result -->
+        <div id="outputText" class="output-text">
+            Hello, welcome to Doge Translator! This project was made by Alfie! Please type any sentence/word in the textbox to translate it.
+        </div>
+    </div>
+
+    <script>
+        // Helper function to convert text to Doge-speak (Much, So, Wow)
+        function textToDoge(text) {
+            const dogePhrases = ["Much", "So", "Very", "Such", "Wow"];
+            const words = text.split(" ");
+
+            return words
+                .map((word, index) => {
+                    const phrase = dogePhrases[index % dogePhrases.length];
+                    return `${phrase} ${word}`;
+                })
+                .join(". ") + ".";
+        }
+
+        // Helper function to convert Doge-speak back to English
+        function dogeToEnglish(dogeText) {
+            const dogePhrases = ["Much", "So", "Very", "Such", "Wow"];
+            const words = dogeText.split(/[\s.]+/);
+            let englishText = [];
+
+            words.forEach((word) => {
+                if (!dogePhrases.includes(word)) {
+                    englishText.push(word);
+                }
+            });
+
+            return englishText.join(" ");
+        }
+
+        // Main conversion function
+        function convertText() {
+            const inputText = document.getElementById("inputText").value.trim();
+            const outputText = document.getElementById("outputText");
+
+            if (!inputText) {
+                return;
+            }
+
+            // Create the output text element
+            let resultText = "";
+
+            if (inputText.toLowerCase().includes("much") || inputText.toLowerCase().includes("so") || inputText.toLowerCase().includes("wow")) {
+                // If it's Doge-speak, convert it to English
+                const englishText = dogeToEnglish(inputText);
+                resultText = "" + englishText;
+            } else {
+                // If it's English, convert it to Doge-speak
+                const dogeText = textToDoge(inputText);
+                resultText = "" + dogeText;
+            }
+
+            // Display the result text with a typewriter effect
+            outputText.textContent = resultText;
+            outputText.style.opacity = 1; // Make the output visible
+
+            // Clear the input box after submission
+            document.getElementById("inputText").value = "";
+        }
+    </script>
+
+</body>
+</html>
+
