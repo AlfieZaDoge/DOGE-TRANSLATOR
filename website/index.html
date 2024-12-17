@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doge translator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <title>Doge Decompiler</title>
     <style>
         /* Global styles */
         * {
@@ -114,10 +113,58 @@
         </div>
     </div>
 
-    <script type="module">
-        // Import the DogeCompiler functions (assume dogeCompiler.js is included)
-        import DogeCompiler from '../api/dogeCompiler.js';
+    <script>
+        // Helper function to convert text to binary
+        function textToBinary(text) {
+            return text
+                .split("") // Split into individual characters
+                .map((char) => {
+                    const binary = char.charCodeAt(0).toString(2); // Convert to binary
+                    return binary.padStart(8, "0"); // Ensure 8 bits per character
+                })
+                .join(" ");
+        }
 
+        // Helper function to convert binary back to text
+        function binaryToText(binaryString) {
+            return binaryString
+                .split(" ") // Split by spaces (each binary word)
+                .map((bin) => String.fromCharCode(parseInt(bin, 2))) // Convert each binary to character
+                .join("");
+        }
+
+        // Convert binary to Doge-speak (Much, So, Wow)
+        function binaryToDoge(binaryString) {
+            const words = binaryString.split(" ");
+            const dogePhrases = ["Much", "So", "Very", "Such", "Wow"];
+
+            return words
+                .map((word, index) => {
+                    const phrase = dogePhrases[index % dogePhrases.length];
+                    return `${phrase} ${word}`;
+                })
+                .join(". ") + ".";
+        }
+
+        // Convert Doge-speak back to binary
+        function dogeToBinary(dogeText) {
+            const dogePhrases = ["Much", "So", "Very", "Such", "Wow"];
+            const words = dogeText.split(/[\s.]+/);
+            let binaryResult = [];
+
+            words.forEach((word) => {
+                const index = dogePhrases.indexOf(word);
+                if (index !== -1) {
+                    binaryResult.push("1"); // Assign a "1" to Doge words
+                } else {
+                    binaryResult.push("0"); // Default "0" for other words
+                }
+            });
+
+            return binaryResult.join(" ");
+        }
+
+        // Main conversion function
         function convertText() {
             const text = document.getElementById("inputText").value.trim();
 
@@ -128,12 +175,14 @@
 
             // Check if the text is Doge-speak or English
             if (text.toLowerCase().includes("much") || text.toLowerCase().includes("so") || text.toLowerCase().includes("wow")) {
-                // Decompile Doge-speak to English
-                const englishText = DogeCompiler.decompileToEnglish(text);
+                // If it's Doge-speak, decompile to English
+                const binaryText = dogeToBinary(text);
+                const englishText = binaryToText(binaryText);
                 document.getElementById("outputText").textContent = "Decompiled to English: " + englishText;
             } else {
-                // Compile English to Doge-speak
-                const dogeText = DogeCompiler.compileToDoge(text);
+                // If it's English, compile to Doge-speak
+                const binaryText = textToBinary(text);
+                const dogeText = binaryToDoge(binaryText);
                 document.getElementById("outputText").textContent = "Converted to Doge-speak: " + dogeText;
             }
         }
